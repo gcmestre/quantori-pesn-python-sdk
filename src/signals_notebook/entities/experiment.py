@@ -4,7 +4,7 @@ from enum import Enum
 from functools import cached_property
 from typing import Any, cast, ClassVar, Dict, Generator, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, Extra
 
 from signals_notebook.common_types import Ancestors, EntityCreationRequestPayload, EntityType, Template
 from signals_notebook.entities import Entity
@@ -17,7 +17,7 @@ from signals_notebook.utils.fs_handler import FSHandler
 log = logging.getLogger(__name__)
 
 
-class _Attributes(BaseModel):
+class _Attributes(BaseModel, extra=Extra.allow):
     name: Optional[str] = None
     description: Optional[str] = None
     organization: Optional[str] = None
@@ -95,7 +95,7 @@ class Experiment(Container):
         request = _RequestPayload(
             data=_RequestBody(
                 type=cls._get_entity_type(),
-                attributes=_Attributes(name=name, description=description, **(attributes or {})),
+                attributes=_Attributes(name=name, description=description, **(attributes or {})).dict(exclude_none=True),
                 relationships=relationships,
             )
         )

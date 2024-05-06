@@ -41,6 +41,7 @@ class Attribute(BaseModel):
     id: AttrID
     name: str
     _options: list[str] = PrivateAttr(default=[])
+    hierarchicalOptions: Optional[list[dict]] = None
 
     def __init__(self, *args, **kwargs):
         self._options = kwargs.pop('options', [])
